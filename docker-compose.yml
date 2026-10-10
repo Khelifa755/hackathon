@@ -1,0 +1,38 @@
+services:
+  rover:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python -m scripts.stage_status
+    cpus: 1
+    mem_limit: 512m
+    environment:
+      SEED: ${SEED:-26}
+    depends_on:
+      - link_emulator
+
+  link_emulator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python -m scripts.stage_status
+    environment:
+      SEED: ${SEED:-26}
+
+  ground:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python -m scripts.stage_status
+    depends_on:
+      - link_emulator
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python -m scripts.stage_status
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ground
